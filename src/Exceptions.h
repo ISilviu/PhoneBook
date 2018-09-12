@@ -51,6 +51,13 @@ public:
 	const char* what() const noexcept;
 };
 
+class CouldNotDeleteContactException : public std::runtime_error
+{
+public:
+	CouldNotDeleteContactException(std::string const& errorMessage);
+	const char* what() const noexcept;
+};
+
 
 
 

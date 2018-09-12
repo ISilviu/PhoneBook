@@ -29,21 +29,14 @@ auto SQLiteDatabase::addContact(QString const & lastName, QString const & firstN
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
 }
 
-auto SQLiteDatabase::searchContact(QString const& lastName, QString const& firstName) -> int
+auto SQLiteDatabase::searchContact(QString const& lastName, QString const& firstName) -> QSqlQuery
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(lastName, firstName);
 	
 	if (!query.exec())
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
-	
-	int contactId{ QueriesManager::NotFoundContactFlag };
-	while (query.next())
-	{
-		static QString const idField{ "id" };
-		contactId = query.value(idField).toInt();
-	}
 
-	return contactId;
+	return query;
 }
 
 auto SQLiteDatabase::updateContact(QString const & lastName, QString const & firstName, QString const & phoneNumber, int const id) -> void
@@ -54,10 +47,17 @@ auto SQLiteDatabase::updateContact(QString const & lastName, QString const & fir
 		throw CouldNotUpdateContactException(query.lastError().text().toStdString());
 }
 
+auto SQLiteDatabase::deleteContact(int const id) -> void
+{
+	QSqlQuery query = QueriesManager::createDeletePersonQuery(id);
+	
+	if (!query.exec())
+		throw CouldNotDeleteContactException(query.lastError().text().toStdString());
+}
+
 auto SQLiteDatabase::retrieveContactData(int const id) -> ContactData
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(id);
-	static QString const errorMessage{ "Could not find the requested contact." };
 
 	if (!query.exec())
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());

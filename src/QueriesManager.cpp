@@ -1,5 +1,15 @@
 #include "QueriesManager.h"
 
+auto QueriesManager::createDefaultUpdateViewQuery() -> QSqlQuery
+{
+	static QString const defaultUpdateViewTemplate{ "SELECT * FROM contacts" };
+	QSqlQuery query;
+
+	query.prepare(defaultUpdateViewTemplate);
+	return query;
+}
+
+
 auto QueriesManager::createAddPersonQuery(QString const& lastName, QString const& firstName, QString const& phoneNumber) noexcept -> QSqlQuery
 {
 	static QString const addPersonTemplate{ "INSERT INTO contacts (lastname, firstname, phonenumber) VALUES (?,?,?);" };
@@ -16,7 +26,7 @@ auto QueriesManager::createAddPersonQuery(QString const& lastName, QString const
 
 auto QueriesManager::createSearchPersonQuery(QString const& lastName, QString const& firstName) noexcept->QSqlQuery
 {
-	static QString const searchPersonTemplate{ "SELECT id, lastname, firstname, phonenumber FROM contacts WHERE lastname = ? AND firstname = ?" };
+	static QString const searchPersonTemplate{ "SELECT * FROM contacts WHERE lastname = ? AND firstname = ?" };
 	QSqlQuery query;
 
 	query.prepare(searchPersonTemplate);
@@ -26,24 +36,24 @@ auto QueriesManager::createSearchPersonQuery(QString const& lastName, QString co
 	return query;
 }
 
-auto QueriesManager::createSearchPersonQuery(int const row) noexcept -> QSqlQuery
+auto QueriesManager::createSearchPersonQuery(int const id) noexcept -> QSqlQuery
 {
 	static QString const searchPersonTemplate{ "SELECT lastname, firstname, phonenumber FROM contacts WHERE id = ?" };
 
 	QSqlQuery query;
 	query.prepare(searchPersonTemplate);
-	query.addBindValue(row);
+	query.addBindValue(id);
 
 	return query;
 }
 
-auto QueriesManager::createDeletePersonQuery(int const row) noexcept -> QSqlQuery
+auto QueriesManager::createDeletePersonQuery(int const id) noexcept -> QSqlQuery
 {
 	static QString const deletePersonTemplate{ "DELETE FROM contacts WHERE id = ?" };
 
 	QSqlQuery query;
 	query.prepare(deletePersonTemplate);
-	query.addBindValue(row);
+	query.addBindValue(id);
 
 	return query;
 }

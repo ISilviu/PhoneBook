@@ -18,9 +18,11 @@ public:
 	
 	auto addContact(QString const& lastName, QString const& firstName, QString const& phoneNumber) -> void;
 	
-	auto searchContact(QString const& lastName, QString const& firstName) -> int;
+	auto searchContact(QString const& lastName, QString const& firstName) -> QSqlQuery;
 
 	auto updateContact(QString const& lastName, QString const& firstName, QString const& phoneNumber, int const id) -> void;
+
+	auto deleteContact(int const id) -> void;
 
 	auto retrieveContactData(int const id)->ContactData;
 

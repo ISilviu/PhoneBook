@@ -62,3 +62,12 @@ const char * CouldNotUpdateContactException::what() const noexcept
 {
 	return std::runtime_error::what();
 }
+
+CouldNotDeleteContactException::CouldNotDeleteContactException(std::string const & errorMessage)
+	: std::runtime_error(errorMessage)
+{}
+
+const char * CouldNotDeleteContactException::what() const noexcept
+{
+	return std::runtime_error::what();
+}

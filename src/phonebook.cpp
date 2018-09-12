@@ -1,6 +1,8 @@
 #include "phonebook.h"
 #include "adddialog.h"
 #include "searchdialog.h"
+#include "foundcontactsdialog.h"
+#include "idrequestdialog.h"
 
 #include <qdir.h>
 #include <qsqlquery.h>
@@ -11,18 +13,29 @@
 #include "QueriesManager.h"
 #include "Exceptions.h"
 
-int constexpr databaseOffset{ 1 };
-char constexpr space{ ' ' };
-
 PhoneBook::PhoneBook(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+	_model = new QSqlQueryModel(this);
+	
+	connectViewAndModel();
 }
 
 auto PhoneBook::prepareDatabaseForUsage() -> void
 {
 	_database.prepareForUsage();
+}
+
+auto PhoneBook::connectViewAndModel() noexcept -> void
+{
+	ui.tableView->setModel(_model);
+}
+
+auto PhoneBook::updateView() noexcept -> void
+{
+	static QString const query{ "SELECT * FROM contacts" };
+	_model->setQuery(query);
 }
 
 auto PhoneBook::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool
@@ -55,9 +68,7 @@ void PhoneBook::on_addButton_clicked()
 			{
 				_database.addContact(lastName, firstName, phoneNumber);
 
-				QListWidgetItem* item = new QListWidgetItem(lastName + space + firstName + space + phoneNumber, ui.peopleListWidget);
-				ui.peopleListWidget->addItem(item);
-				ui.peopleListWidget->setCurrentItem(item);
+				updateView();
 			}
 			catch (CouldNotAddContactException const& e)
 			{
@@ -66,6 +77,7 @@ void PhoneBook::on_addButton_clicked()
 			}
 		}
 	}
+
 }
 
 void PhoneBook::on_searchButton_clicked()
@@ -80,15 +92,12 @@ void PhoneBook::on_searchButton_clicked()
 		{
 			try
 			{
-				int id = _database.searchContact(lastName, firstName);
-				if (id != QueriesManager::NotFoundContactFlag)
-					ui.peopleListWidget->setCurrentRow(id - databaseOffset);
-				else
-				{
-					static QString const errorTitle{ "Not found." };
-					static QString const errorMessage{ "The contact was not found." };
-					QMessageBox::warning(&dialog, errorTitle, errorMessage);
-				}
+				FoundContactsDialog foundContactsDialog(&dialog);
+				QSqlQueryModel* model = new QSqlQueryModel(&foundContactsDialog);
+
+				model->setQuery(_database.searchContact(lastName,firstName));
+				foundContactsDialog.foundContactsTableView->setModel(model);
+				foundContactsDialog.exec();
 			}
 			catch (CouldNotSearchForTheContactException const& e)
 			{
@@ -101,59 +110,76 @@ void PhoneBook::on_searchButton_clicked()
 
 void PhoneBook::on_updateButton_clicked()
 {
-	QListWidgetItem* item = ui.peopleListWidget->currentItem();
-	
-	if (item)
+	IdRequestDialog dialog(this);
+	if (dialog.exec())
 	{
-		int row = ui.peopleListWidget->row(item);
-		ContactData data = _database.retrieveContactData(row + databaseOffset);
-
-		QString lastName = std::get<0>(data);
-		QString firstName = std::get<1>(data);
-		QString phoneNumber = std::get<2>(data);
-
-		AddDialog dialog(this);
-		dialog.setEditFieldsText(lastName, firstName, phoneNumber);
-
-		if (dialog.exec())
+		QString const id = dialog.idLineEdit->text();
+		if (!id.isEmpty())
 		{
-			if (hasAnyLineEditFieldChanged(dialog))
+			ContactData data = _database.retrieveContactData(id.toInt());
+			
+			QString lastName = std::get<0>(data);
+			QString firstName = std::get<1>(data);
+			QString phoneNumber = std::get<2>(data);
+
+			if (!lastName.isEmpty() && !firstName.isEmpty() && !phoneNumber.isEmpty())
 			{
-				lastName = dialog.lastNameEdit->text();
-				firstName = dialog.firstNameEdit->text();
-				phoneNumber = dialog.phoneNumberEdit->text();
-				
-				try
+				AddDialog updateDialog(&dialog);
+				updateDialog.setEditFieldsText(lastName, firstName, phoneNumber);
+
+				if (updateDialog.exec())
 				{
-					_database.updateContact(lastName, firstName, phoneNumber, row + databaseOffset);
-					item->setText(lastName + space + firstName + space + phoneNumber);
-				}
-				catch (CouldNotUpdateContactException const& e)
-				{
-					static QString const errorMessage{ "Could not update this contact's data." };
-					QMessageBox::warning(&dialog, errorMessage, e.what());
+					if (hasAnyLineEditFieldChanged(updateDialog))
+					{
+						lastName = updateDialog.lastNameEdit->text();
+						firstName = updateDialog.firstNameEdit->text();
+						phoneNumber = updateDialog.phoneNumberEdit->text();
+
+						try
+						{
+							_database.updateContact(lastName, firstName, phoneNumber, id.toInt());
+
+							updateView();
+						}
+						catch (CouldNotUpdateContactException const& e)
+						{
+							static QString const errorMessage{ "Could not update the contact." };
+							QMessageBox::warning(&dialog, errorMessage, e.what());
+						}
+					}
 				}
 			}
+			else
+			{
+				static QString const errorTitle{ "Not found." };
+				static QString const errorMessage{ "The Id you entered was not found." };
+				QMessageBox::warning(&dialog, errorTitle, errorMessage);
+			}
 		}
+
 	}
 }
 
-//void PhoneBook::on_deleteButton_clicked()
-//{
-//	QListWidgetItem* item = ui.peopleListWidget->currentItem();
-//
-//	if (item)
-//	{
-//		int row = ui.peopleListWidget->row(item);
-//		QSqlQuery query = QueriesManager::createDeletePersonQuery(row + databaseOffset);
-//		static QString const errorMessage{ "Could not delete the contact." };
-//
-//		if (!query.exec())
-//			QMessageBox::warning(this, errorMessage, query.lastError().text());
-//		else
-//		{
-//			ui.peopleListWidget->takeItem(row);
-//			delete item;
-//		}
-//	}
-//};
+void PhoneBook::on_deleteButton_clicked()
+{
+	IdRequestDialog dialog(this);
+	if (dialog.exec())
+	{
+		QString const id = dialog.idLineEdit->text();
+		if (!id.isEmpty())
+		{
+			try
+			{
+				_database.deleteContact(id.toInt());
+
+				updateView();
+			}
+			catch (CouldNotDeleteContactException const& e)
+			{
+				static QString const errorMessage{ "Could not delete this contact." };
+				QMessageBox::warning(&dialog, errorMessage, e.what());
+			}
+		}
+	}
+
+};
