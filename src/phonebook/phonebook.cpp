@@ -12,6 +12,12 @@ auto PhoneBook::addStoragePlugin(IPlugin* plugin) noexcept -> void
 
 auto PhoneBook::initiatePlugins() -> void
 {
-	_uiPlugin->init();
-	_storagePlugin->init();
+	_storagePlugin->init(_uiPlugin->getDependencies());
+	_uiPlugin->init(_storagePlugin->getDependencies());
+}
+
+auto PhoneBook::run() -> void
+{
+	_storagePlugin->run();
+	_uiPlugin->run();
 }

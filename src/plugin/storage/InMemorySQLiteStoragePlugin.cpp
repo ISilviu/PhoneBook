@@ -5,14 +5,17 @@ std::vector<Dependency> InMemorySQLiteStoragePlugin::getDependencies() const
 	return _dependencies;
 }
 
-void InMemorySQLiteStoragePlugin::init()
+void InMemorySQLiteStoragePlugin::init(std::vector<Dependency> const& dependencies)
 {
-	_database.prepareForUsage();
+	static std::string const name{ ":memory:" };
+
+	_database.createDatabaseFile(name);
+	_database.open();
 }
 
 void InMemorySQLiteStoragePlugin::run()
 {
-
+	_database.createMainTable();
 }
 
 void InMemorySQLiteStoragePlugin::shutDown()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qsqlquerymodel.h>
+
 #include  "IPlugin.h"
 #include "InMemorySQLiteDatabase.h"
 #include "Dependency.h"
@@ -7,14 +9,6 @@
 #include <array>
 
 constexpr auto defaultStorageDependencies = std::array<Dependency, 1> {Dependency::UI_PLUGIN};
-virtual std::vector<Dependency> getDependencies() = 0;
-
-virtual void init() = 0;
-
-virtual void run() = 0;
-
-virtual void shutDown() = 0;
-
 
 class InMemorySQLiteStoragePlugin : public IPlugin
 {
@@ -22,16 +16,17 @@ public:
 
 	std::vector<Dependency> getDependencies() const;
 
-	void init();
+	void init(std::vector<Dependency> const& dependencies) override;
 
-	void run();
+	void run() override;
 
-	void shutDown();
+	void shutDown() override;
 
 	InMemorySQLiteDatabase _database;
 
 private:
-	std::vector<Dependency> _dependencies;
+	QSqlQueryModel* _model;
 
+	const std::vector<Dependency> _dependencies{ defaultStorageDependencies.cbegin(), defaultStorageDependencies.cend() };
 };
 

@@ -12,6 +12,11 @@ auto SQLiteDatabase::open() -> void
 		throw CouldNotOpenDatabaseException("The SQLite database couldn't be opened.");
 }
 
+auto SQLiteDatabase::close() -> void
+{
+	_database.close();
+}
+
 auto SQLiteDatabase::createMainTable() -> void
 {
 	static QString const createTableTemplate{ "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, lastname TEXT, firstname TEXT, phonenumber TEXT);" };
@@ -19,6 +24,14 @@ auto SQLiteDatabase::createMainTable() -> void
 
 	if (!query.exec(createTableTemplate))
 		throw CouldNotCreateDatabaseTableException(query.lastError().text().toStdString());
+}
+
+auto SQLiteDatabase::addContact(std::string const & lastName, std::string const & firstName, std::string const & phoneNumber) -> void
+{
+	QSqlQuery query = QueriesManager::createAddPersonQuery(lastName, firstName, phoneNumber);
+
+	if (!query.exec())
+		throw CouldNotAddContactException(query.lastError().text().toStdString());
 }
 
 auto SQLiteDatabase::addContact(QString const & lastName, QString const & firstName, QString const & phoneNumber) -> void
@@ -29,6 +42,16 @@ auto SQLiteDatabase::addContact(QString const & lastName, QString const & firstN
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
 }
 
+auto SQLiteDatabase::searchContact(std::string const & lastName, std::string const & firstName) -> QSqlQuery
+{
+	QSqlQuery query = QueriesManager::createSearchPersonQuery(lastName, firstName);
+
+	if (!query.exec())
+		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
+
+	return query;
+}
+
 auto SQLiteDatabase::searchContact(QString const& lastName, QString const& firstName) -> QSqlQuery
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(lastName, firstName);
@@ -37,6 +60,14 @@ auto SQLiteDatabase::searchContact(QString const& lastName, QString const& first
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
 
 	return query;
+}
+
+auto SQLiteDatabase::updateContact(std::string const & lastName, std::string const & firstName, std::string const & phoneNumber, int const id) -> void
+{
+	QSqlQuery query = QueriesManager::createUpdatePersonQuery(lastName, firstName, phoneNumber, id);
+
+	if (!query.exec())
+		throw CouldNotUpdateContactException(query.lastError().text().toStdString());
 }
 
 auto SQLiteDatabase::updateContact(QString const & lastName, QString const & firstName, QString const & phoneNumber, int const id) -> void

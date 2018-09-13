@@ -20,8 +20,3 @@ private:
 	IPlugin* _uiPlugin;
 };
 
-auto PhoneBook::run() -> void
-{
-	_storagePlugin->run();
-	_uiPlugin->run();
-}

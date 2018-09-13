@@ -7,7 +7,9 @@ class InMemorySQLiteDatabase : public SQLiteDatabase
 public:
 	InMemorySQLiteDatabase();
 	void prepareForUsage();
-private:
+
 	void createDatabaseFile(QString const& name) override;
+
+	void createDatabaseFile(std::string const& name) override;
 };
 
