@@ -7,8 +7,6 @@
 
 #include "Exceptions.h"
 
-#include <qdebug.h>
-
 int main(int argc, char *argv[])
 {
 
@@ -16,26 +14,30 @@ int main(int argc, char *argv[])
 	PhoneBook phoneBookApplication;
 
 	InMemorySQLiteStoragePlugin storagePlugin;
-	phoneBookApplication.addStoragePlugin(&storagePlugin);
+	phoneBookApplication.addPlugin(&storagePlugin);	
 
 	QtUiPlugin uiPlugin;
-	phoneBookApplication.addUiPlugin(&uiPlugin);
+	phoneBookApplication.addPlugin(&uiPlugin);
 
+	storagePlugin.init();
 	try
 	{
-		phoneBookApplication.initiatePlugins();
-		phoneBookApplication.run();
+		uiPlugin.init(std::vector<IPlugin*>{&storagePlugin});
+
+		storagePlugin.run();
+		uiPlugin.run();
 		return a.exec();
 	}
 	catch (CouldNotOpenDatabaseException const& e)
 	{
-		qDebug() << e.what();
 		std::exit(EXIT_FAILURE);
 	}
 	catch (CouldNotCreateDatabaseTableException const& e)
 	{
-		qDebug() << e.what();
 		std::exit(EXIT_FAILURE);
-
+	}
+	catch (NonMatchingDependencyTypeException const& e)
+	{
+		std::exit(EXIT_FAILURE);
 	}
 }

@@ -4,19 +4,16 @@
 
 #include  "IPlugin.h"
 #include "InMemorySQLiteDatabase.h"
-#include "Dependency.h"
 
 #include <array>
-
-constexpr auto defaultStorageDependencies = std::array<Dependency, 1> {Dependency::UI_PLUGIN};
 
 class InMemorySQLiteStoragePlugin : public IPlugin
 {
 public:
 
-	std::vector<Dependency> getDependencies() const;
+	std::vector<IPlugin*> getDependencies() const;
 
-	void init(std::vector<Dependency> const& dependencies) override;
+	void init() override;
 
 	void run() override;
 
@@ -24,9 +21,15 @@ public:
 
 	InMemorySQLiteDatabase _database;
 
+	auto getModel() const noexcept->QSqlQueryModel*;
+
+	auto updateView() noexcept -> void;
+
 private:
+	void init(std::vector<IPlugin*> const& dependencies) override {};
+
 	QSqlQueryModel* _model;
 
-	const std::vector<Dependency> _dependencies{ defaultStorageDependencies.cbegin(), defaultStorageDependencies.cend() };
+	std::vector<IPlugin*> _dependencies;
 };
 

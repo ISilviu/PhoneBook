@@ -8,9 +8,11 @@ class IPlugin
 public:
 	virtual ~IPlugin() = default;
 
-	virtual std::vector<Dependency> getDependencies() const = 0;
+	virtual std::vector<IPlugin*> getDependencies() const = 0;
 
-	virtual void init(std::vector<Dependency> const& dependencies) = 0;
+	virtual void init(std::vector<IPlugin*> const& dependencies) = 0;
+
+	virtual void init() = 0;
 
 	virtual void run() = 0;
 

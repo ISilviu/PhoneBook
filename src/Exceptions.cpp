@@ -71,3 +71,11 @@ const char * CouldNotDeleteContactException::what() const noexcept
 {
 	return std::runtime_error::what();
 }
+
+NonMatchingDependencyTypeException::NonMatchingDependencyTypeException(std::string const & errorMessage)
+	: std::runtime_error(errorMessage)
+{}
+const char * NonMatchingDependencyTypeException::what() const noexcept
+{
+	return std::runtime_error::what();
+}

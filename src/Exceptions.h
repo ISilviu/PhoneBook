@@ -58,6 +58,13 @@ public:
 	const char* what() const noexcept;
 };
 
+class NonMatchingDependencyTypeException : public std::runtime_error
+{
+public:
+	NonMatchingDependencyTypeException(std::string const& errorMessage);
+	const char* what() const noexcept;
+};
+
 
 
 

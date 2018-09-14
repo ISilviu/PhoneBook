@@ -10,10 +10,8 @@
 #include "adddialog.h"
 
 #include "IPlugin.h"
-#include "Dependency.h"
-#include "InMemorySQLiteStoragePlugin.h"
 
-constexpr auto defaultUiDependencies = std::array<Dependency, 1>{ Dependency::STORAGE_PLUGIN };
+#include "InMemorySQLiteStoragePlugin.h"
 
 class QtUiPlugin : public QWidget, public IPlugin
 {
@@ -22,16 +20,20 @@ class QtUiPlugin : public QWidget, public IPlugin
 public:
 	explicit QtUiPlugin(QWidget* parent = Q_NULLPTR);
 
-	std::vector<Dependency> getDependencies() const override;
+	std::vector<IPlugin*> getDependencies() const override;
 
-	void init(std::vector<Dependency> const& dependencies) override;
+	void init(std::vector<IPlugin*> const& dependencies) override;
 
 	void run() override;
 
 	void shutDown() override;
 
-
 private:
+	void init() override {};
+
+	auto updateView(QSqlQueryModel* model) noexcept -> void;
+
+	auto initializeDependencies() noexcept -> void;
 
 	auto areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool;
 	
@@ -41,14 +43,16 @@ private:
 	
 	Ui::PhoneBookClass ui;
 
-	const std::vector<Dependency> _dependencies{ Dependency::STORAGE_PLUGIN };
+	std::vector<IPlugin*> _dependencies;
+
+	InMemorySQLiteStoragePlugin* _storagePlugin;
 
 private slots:
-	/*void on_addButton_clicked();
+	void on_addButton_clicked();
 	
 	void on_searchButton_clicked();
 	
 	void on_updateButton_clicked();
 	
-	void on_deleteButton_clicked();*/
+	void on_deleteButton_clicked();
 };

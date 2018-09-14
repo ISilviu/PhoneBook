@@ -6,17 +6,10 @@ class PhoneBook
 {
 public:
 
-	auto addUiPlugin(IPlugin* plugin) noexcept -> void;
-	auto addStoragePlugin(IPlugin* plugin) noexcept -> void;
-
-	auto initiatePlugins() -> void;
-
-	auto run() -> void;
+	auto addPlugin(IPlugin* plugin) noexcept -> void;
 
 private:
-
-	IPlugin* _storagePlugin;
-
-	IPlugin* _uiPlugin;
+	
+	std::vector<IPlugin*> _plugins;
 };
 
