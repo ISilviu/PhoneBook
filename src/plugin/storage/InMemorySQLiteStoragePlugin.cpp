@@ -1,4 +1,5 @@
 #include "InMemorySQLiteStoragePlugin.h"
+#include "Exceptions.h"
 
 //std::vector<IPlugin*> InMemorySQLiteStoragePlugin::getDependencies() const
 //{
@@ -17,10 +18,21 @@ void InMemorySQLiteStoragePlugin::init()
 
 int InMemorySQLiteStoragePlugin::run()
 {
-	_database.createMainTable();
-
-	constexpr int value{ 1 };
-	return value;
+	constexpr int isRunningSpecifier{ 1 };
+	constexpr int isNotRunningSpecifier{ 0 };
+	try
+	{
+		_database.createMainTable();
+		return 1;
+	}
+	catch (CouldNotOpenDatabaseException const& e)
+	{
+		return 0;
+	}
+	catch (CouldNotCreateDatabaseTableException const& e)
+	{
+		return 0;
+	}
 }
 
 void InMemorySQLiteStoragePlugin::shutDown()

@@ -1,4 +1,5 @@
 #include "UiPlugin.h"
+#include "Exceptions.h"
 
 UiPlugin::UiPlugin(int argc, char* argv[], QWidget* parent)
 	: _application(argc, argv),
@@ -12,9 +13,17 @@ void UiPlugin::init(std::vector<IPlugin*> const& dependencies)
 
 int UiPlugin::run()
 {
-	_widget.show();
+	constexpr int notRunningReturnValue{ 1 };
+	try
+	{
+		_widget.show();
 
-	return _application.exec();
+		return _application.exec();
+	}
+	catch (NonMatchingDependencyTypeException const& e)
+	{
+		return notRunningReturnValue;
+	}
 }
 
 void UiPlugin::shutDown()

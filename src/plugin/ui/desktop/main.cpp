@@ -18,23 +18,9 @@ int main(int argc, char *argv[])
 	phoneBookApplication.addPlugin(&uiPlugin);
 
 	storagePlugin.init();
-	try
-	{
-		uiPlugin.init(std::vector<IPlugin*>{&storagePlugin});
 
-		storagePlugin.run();
+	uiPlugin.init(std::vector<IPlugin*>{&storagePlugin});
+
+	if(storagePlugin.run())
 		return uiPlugin.run();
-	}
-	catch (CouldNotOpenDatabaseException const& e)
-	{
-		std::exit(EXIT_FAILURE);
-	}
-	catch (CouldNotCreateDatabaseTableException const& e)
-	{
-		std::exit(EXIT_FAILURE);
-	}
-	catch (NonMatchingDependencyTypeException const& e)
-	{
-		std::exit(EXIT_FAILURE);
-	}
 }
