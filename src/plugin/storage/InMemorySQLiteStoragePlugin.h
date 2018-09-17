@@ -11,11 +11,11 @@ class InMemorySQLiteStoragePlugin : public IPlugin
 {
 public:
 
-	std::vector<IPlugin*> getDependencies() const;
+	//std::vector<IPlugin*> getDependencies() const;
 
 	void init() override;
 
-	void run() override;
+	int run() override;
 
 	void shutDown() override;
 

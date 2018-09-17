@@ -1,9 +1,9 @@
 #include "InMemorySQLiteStoragePlugin.h"
 
-std::vector<IPlugin*> InMemorySQLiteStoragePlugin::getDependencies() const
-{
-	return _dependencies;
-}
+//std::vector<IPlugin*> InMemorySQLiteStoragePlugin::getDependencies() const
+//{
+//	return _dependencies;
+//}
 
 void InMemorySQLiteStoragePlugin::init()
 {
@@ -15,9 +15,12 @@ void InMemorySQLiteStoragePlugin::init()
 	_model = new QSqlQueryModel();
 }
 
-void InMemorySQLiteStoragePlugin::run()
+int InMemorySQLiteStoragePlugin::run()
 {
 	_database.createMainTable();
+
+	constexpr int value{ 1 };
+	return value;
 }
 
 void InMemorySQLiteStoragePlugin::shutDown()

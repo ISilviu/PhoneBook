@@ -3,8 +3,6 @@
 #include <QWidget>
 #include <qsqlquerymodel.h>
 
-#include <array>
-
 #include "ui_phonebook.h"
 
 #include "adddialog.h"
@@ -13,25 +11,16 @@
 
 #include "InMemorySQLiteStoragePlugin.h"
 
-class QtUiPlugin : public QWidget, public IPlugin
+class UiMainWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	explicit QtUiPlugin(QWidget* parent = Q_NULLPTR);
+	explicit UiMainWidget(QWidget* parent = Q_NULLPTR);
 
-	std::vector<IPlugin*> getDependencies() const override;
-
-	void init(std::vector<IPlugin*> const& dependencies) override;
-
-	void run() override;
-
-	void shutDown() override;
+	void init(std::vector<IPlugin*> const& dependencies);
 
 private:
-	void init() override {};
-
-	auto updateView(QSqlQueryModel* model) noexcept -> void;
 
 	auto initializeDependencies() noexcept -> void;
 
@@ -40,7 +29,7 @@ private:
 	auto areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName) const noexcept -> bool;
 	
 	auto hasAnyLineEditFieldChanged(AddDialog const& dialog) const noexcept -> bool;
-	
+
 	Ui::PhoneBookClass ui;
 
 	std::vector<IPlugin*> _dependencies;

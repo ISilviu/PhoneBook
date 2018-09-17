@@ -1,4 +1,4 @@
-#include "QtUiPlugin.h"
+#include "UiMainWidget.h"
 #include "Exceptions.h"
 
 #include "adddialog.h"
@@ -11,12 +11,12 @@
 
 #include "InMemorySQLiteStoragePlugin.h"
 
-std::vector<IPlugin*> QtUiPlugin::getDependencies() const
-{
-	return _dependencies;
-}
+//std::vector<IPlugin*> UiMainWidget::getDependencies() const
+//{
+//	return _dependencies;
+//}
 
-void QtUiPlugin::init(std::vector<IPlugin*> const& dependencies)
+void UiMainWidget::init(std::vector<IPlugin*> const& dependencies)
 {
 	if (typeid(dependencies.front()) != typeid(_dependencies.front()))
 		throw NonMatchingDependencyTypeException("The provided plugin is not the needed one.");
@@ -28,51 +28,35 @@ void QtUiPlugin::init(std::vector<IPlugin*> const& dependencies)
 	ui.tableView->setModel(_storagePlugin->getModel());
 }
 
-QtUiPlugin::QtUiPlugin(QWidget* parent)
-	: QWidget(parent)
+UiMainWidget::UiMainWidget(QWidget* parent)
+	:QWidget(parent)
 {
-	initializeDependencies();
+	initializeDependencies(); 
 }
 
-void QtUiPlugin::run()
-{
-	show();
-}
-
-void QtUiPlugin::shutDown()
-{
-	hide();
-}
-
-auto QtUiPlugin::updateView(QSqlQueryModel * model) noexcept -> void
-{
-	static QString const query{ "SELECT * FROM contacts" };
-	model->setQuery(query);
-}
-
-auto QtUiPlugin::initializeDependencies() noexcept -> void
+auto UiMainWidget::initializeDependencies() noexcept -> void
 {
 	InMemorySQLiteStoragePlugin storagePlugin;
 
 	_dependencies.push_back(&storagePlugin);
 }
 
-auto QtUiPlugin::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool
+auto UiMainWidget::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool
 {
 	return (!lastName.isEmpty() && !firstName.isEmpty() && !phoneNumber.isEmpty());
 }
 
-auto QtUiPlugin::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName) const noexcept ->bool
+auto UiMainWidget::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName) const noexcept ->bool
 {
 	return (!lastName.isEmpty() && !firstName.isEmpty());
 }
 
-auto QtUiPlugin::hasAnyLineEditFieldChanged(AddDialog const & dialog) const noexcept -> bool
+auto UiMainWidget::hasAnyLineEditFieldChanged(AddDialog const & dialog) const noexcept -> bool
 {
 	return (dialog.lastNameEdit->isModified() || dialog.firstNameEdit->isModified() || dialog.phoneNumberEdit->isModified());
 }
 
-void QtUiPlugin::on_addButton_clicked()
+void UiMainWidget::on_addButton_clicked()
 {
 	AddDialog dialog(this);
 	if (dialog.exec())
@@ -100,7 +84,7 @@ void QtUiPlugin::on_addButton_clicked()
 
 }
 
-void QtUiPlugin::on_searchButton_clicked()
+void UiMainWidget::on_searchButton_clicked()
 {
 	SearchDialog dialog(this);
 	if (dialog.exec())
@@ -128,7 +112,7 @@ void QtUiPlugin::on_searchButton_clicked()
 	}
 }
 
-void QtUiPlugin::on_updateButton_clicked()
+void UiMainWidget::on_updateButton_clicked()
 {
 	IdRequestDialog dialog(this);
 	if (dialog.exec())
@@ -181,7 +165,7 @@ void QtUiPlugin::on_updateButton_clicked()
 	}
 }
 
-void QtUiPlugin::on_deleteButton_clicked()
+void UiMainWidget::on_deleteButton_clicked()
 {
 	IdRequestDialog dialog(this);
 	if (dialog.exec())

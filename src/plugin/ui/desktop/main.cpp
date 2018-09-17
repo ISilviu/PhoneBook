@@ -1,6 +1,6 @@
 #include "phonebook.h"
 
-#include "QtUiPlugin.h"
+#include "UiPlugin.h"
 #include "InMemorySQLiteStoragePlugin.h"
 
 #include <QtWidgets/QApplication>
@@ -9,14 +9,12 @@
 
 int main(int argc, char *argv[])
 {
-
-	QApplication a(argc, argv);
 	PhoneBook phoneBookApplication;
 
 	InMemorySQLiteStoragePlugin storagePlugin;
 	phoneBookApplication.addPlugin(&storagePlugin);	
 
-	QtUiPlugin uiPlugin;
+	UiPlugin uiPlugin(argc, argv);
 	phoneBookApplication.addPlugin(&uiPlugin);
 
 	storagePlugin.init();
@@ -25,8 +23,7 @@ int main(int argc, char *argv[])
 		uiPlugin.init(std::vector<IPlugin*>{&storagePlugin});
 
 		storagePlugin.run();
-		uiPlugin.run();
-		return a.exec();
+		return uiPlugin.run();
 	}
 	catch (CouldNotOpenDatabaseException const& e)
 	{
