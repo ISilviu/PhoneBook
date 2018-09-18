@@ -16,29 +16,17 @@
 //	return _dependencies;
 //}
 
-void UiMainWidget::init(std::vector<IPlugin*> const& dependencies)
-{
-	if (typeid(dependencies.front()) != typeid(_dependencies.front()))
-		throw NonMatchingDependencyTypeException("The provided plugin is not the needed one.");
-
-	ui.setupUi(this);
-
-	_storagePlugin = dynamic_cast<InMemorySQLiteStoragePlugin*>(dependencies.front());
-
-	ui.tableView->setModel(_storagePlugin->getModel());
-}
-
 UiMainWidget::UiMainWidget(QWidget* parent)
 	:QWidget(parent)
 {
-	initializeDependencies(); 
+	ui.setupUi(this);
 }
 
-auto UiMainWidget::initializeDependencies() noexcept -> void
+void UiMainWidget::init(InMemorySQLiteDatabase& readModel)
 {
-	InMemorySQLiteStoragePlugin storagePlugin;
+	_readModel = readModel;
 
-	_dependencies.push_back(&storagePlugin);
+	ui.tableView->setModel(_readModel.getModel());
 }
 
 auto UiMainWidget::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool
@@ -69,10 +57,9 @@ void UiMainWidget::on_addButton_clicked()
 		{
 			try
 			{
+				_readModel.addContact(lastName, firstName, phoneNumber);
 
-				_storagePlugin->_database.addContact(lastName, firstName, phoneNumber);
-
-				_storagePlugin->updateView();
+				_readModel.updateView();
 			}
 			catch (CouldNotAddContactException const& e)
 			{
@@ -99,7 +86,7 @@ void UiMainWidget::on_searchButton_clicked()
 				FoundContactsDialog foundContactsDialog(&dialog);
 				QSqlQueryModel* model = new QSqlQueryModel(&foundContactsDialog);
 
-				model->setQuery(_storagePlugin->_database.searchContact(lastName, firstName));
+				model->setQuery(_readModel.searchContact(lastName, firstName));
 				foundContactsDialog.foundContactsTableView->setModel(model);
 				foundContactsDialog.exec();
 			}
@@ -121,7 +108,7 @@ void UiMainWidget::on_updateButton_clicked()
 		if (!id.isEmpty())
 		{
 
-			ContactData data = _storagePlugin->_database.retrieveContactData(id.toInt());
+			ContactData data = _readModel.retrieveContactData(id.toInt());
 
 			QString lastName = std::get<0>(data);
 			QString firstName = std::get<1>(data);
@@ -142,9 +129,9 @@ void UiMainWidget::on_updateButton_clicked()
 
 						try
 						{
-							_storagePlugin->_database.updateContact(lastName, firstName, phoneNumber, id.toInt());
+							_readModel.updateContact(lastName, firstName, phoneNumber, id.toInt());
 
-							_storagePlugin->updateView();
+							_readModel.updateView();
 						}
 						catch (CouldNotUpdateContactException const& e)
 						{
@@ -175,9 +162,9 @@ void UiMainWidget::on_deleteButton_clicked()
 		{
 			try
 			{
-				_storagePlugin->_database.deleteContact(id.toInt());
+				_readModel.deleteContact(id.toInt());
 
-				_storagePlugin->updateView();
+				_readModel.updateView();
 			}
 			catch (CouldNotDeleteContactException const& e)
 			{

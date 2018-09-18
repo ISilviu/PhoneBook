@@ -18,7 +18,15 @@ public:
 	void shutDown() override;
 
 private:
+	auto checkForNonMatchingDependencies(std::vector<IPlugin*> const& dependencies) const -> void;
+
+	auto initializeDependencies() noexcept -> void;
+
 	void init() override {};
+
+	std::vector<IPlugin*> _dependencies;
+
+	InMemorySQLiteDatabase _readModel;
 
 	QApplication _application;
 

@@ -10,10 +10,9 @@ void InMemorySQLiteStoragePlugin::init()
 {
 	static std::string const name{ ":memory:" };
 
+	_database.createModel();
 	_database.createDatabaseFile(name);
 	_database.open();
-
-	_model = new QSqlQueryModel();
 }
 
 int InMemorySQLiteStoragePlugin::run()
@@ -23,15 +22,15 @@ int InMemorySQLiteStoragePlugin::run()
 	try
 	{
 		_database.createMainTable();
-		return 1;
+		return isRunningSpecifier;
 	}
 	catch (CouldNotOpenDatabaseException const& e)
 	{
-		return 0;
+		return isNotRunningSpecifier;
 	}
 	catch (CouldNotCreateDatabaseTableException const& e)
 	{
-		return 0;
+		return isNotRunningSpecifier;
 	}
 }
 
@@ -40,14 +39,4 @@ void InMemorySQLiteStoragePlugin::shutDown()
 	_database.close();
 }
 
-auto InMemorySQLiteStoragePlugin::getModel() const noexcept -> QSqlQueryModel *
-{
-	return _model;
-}
 
-auto InMemorySQLiteStoragePlugin::updateView() noexcept -> void
-{
-	static QString const query{ "SELECT * FROM contacts" };
-	_model->setQuery(query);
-
-}

@@ -21,15 +21,7 @@ public:
 
 	InMemorySQLiteDatabase _database;
 
-	auto getModel() const noexcept->QSqlQueryModel*;
-
-	auto updateView() noexcept -> void;
-
 private:
 	void init(std::vector<IPlugin*> const& dependencies) override {};
-
-	QSqlQueryModel* _model;
-
-	std::vector<IPlugin*> _dependencies;
 };
 

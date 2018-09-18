@@ -18,11 +18,9 @@ class UiMainWidget : public QWidget
 public:
 	explicit UiMainWidget(QWidget* parent = Q_NULLPTR);
 
-	void init(std::vector<IPlugin*> const& dependencies);
+	void init(InMemorySQLiteDatabase& readModel);
 
 private:
-
-	auto initializeDependencies() noexcept -> void;
 
 	auto areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool;
 	
@@ -30,11 +28,9 @@ private:
 	
 	auto hasAnyLineEditFieldChanged(AddDialog const& dialog) const noexcept -> bool;
 
+	InMemorySQLiteDatabase _readModel;
+	
 	Ui::PhoneBookClass ui;
-
-	std::vector<IPlugin*> _dependencies;
-
-	InMemorySQLiteStoragePlugin* _storagePlugin;
 
 private slots:
 	void on_addButton_clicked();
