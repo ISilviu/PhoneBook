@@ -11,6 +11,12 @@
 
 #include "InMemorySQLiteStoragePlugin.h"
 
+#include "LastName.h"
+#include "FirstName.h"
+#include "PhoneNumber.h"
+#include "ContactId.h"
+#include "Contact.h"
+
 //std::vector<IPlugin*> UiMainWidget::getDependencies() const
 //{
 //	return _dependencies;
@@ -22,21 +28,21 @@ UiMainWidget::UiMainWidget(QWidget* parent)
 	ui.setupUi(this);
 }
 
-void UiMainWidget::init(InMemorySQLiteDatabase& readModel)
+void UiMainWidget::init(InMemorySQLiteDatabase const& readModel)
 {
 	_readModel = readModel;
 
 	ui.tableView->setModel(_readModel.getModel());
 }
 
-auto UiMainWidget::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool
+auto UiMainWidget::areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) const noexcept -> bool
 {
-	return (!lastName.isEmpty() && !firstName.isEmpty() && !phoneNumber.isEmpty());
+	return (!lastName.get().isEmpty() && !firstName.get().isEmpty() && !phoneNumber.get().isEmpty());
 }
 
-auto UiMainWidget::areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName) const noexcept ->bool
+auto UiMainWidget::areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName) const noexcept ->bool
 {
-	return (!lastName.isEmpty() && !firstName.isEmpty());
+	return (!lastName.get().isEmpty() && !firstName.get().isEmpty());
 }
 
 auto UiMainWidget::hasAnyLineEditFieldChanged(AddDialog const & dialog) const noexcept -> bool
@@ -49,15 +55,15 @@ void UiMainWidget::on_addButton_clicked()
 	AddDialog dialog(this);
 	if (dialog.exec())
 	{
-		QString lastName = dialog.lastNameEdit->text();
-		QString firstName = dialog.firstNameEdit->text();
-		QString phoneNumber = dialog.phoneNumberEdit->text();
+		LastName lastName = dialog.lastNameEdit->text();
+		FirstName firstName = dialog.firstNameEdit->text();
+		PhoneNumber phoneNumber = dialog.phoneNumberEdit->text();
 
 		if (areAllLineEditFieldsFilled(lastName, firstName, phoneNumber))
 		{
 			try
 			{
-				_readModel.addContact(lastName, firstName, phoneNumber);
+				_readModel.addContact(lastName.get(), firstName.get(), phoneNumber.get());
 
 				_readModel.updateView();
 			}
@@ -76,8 +82,8 @@ void UiMainWidget::on_searchButton_clicked()
 	SearchDialog dialog(this);
 	if (dialog.exec())
 	{
-		QString lastName = dialog.lastNameEdit->text();
-		QString firstName = dialog.firstNameEdit->text();
+		LastName lastName = dialog.lastNameEdit->text();
+		FirstName firstName = dialog.firstNameEdit->text();
 
 		if (areAllLineEditFieldsFilled(lastName, firstName))
 		{
@@ -104,32 +110,29 @@ void UiMainWidget::on_updateButton_clicked()
 	IdRequestDialog dialog(this);
 	if (dialog.exec())
 	{
-		QString const id = dialog.idLineEdit->text();
-		if (!id.isEmpty())
+
+		if (!dialog.idLineEdit->text().isEmpty())
 		{
+			ContactId id = dialog.idLineEdit->text().toInt();
 
-			ContactData data = _readModel.retrieveContactData(id.toInt());
+			Contact data = _readModel.retrieveContactData(id.get());
 
-			QString lastName = std::get<0>(data);
-			QString firstName = std::get<1>(data);
-			QString phoneNumber = std::get<2>(data);
-
-			if (!lastName.isEmpty() && !firstName.isEmpty() && !phoneNumber.isEmpty())
+			if (!data.isEmpty())
 			{
 				AddDialog updateDialog(&dialog);
-				updateDialog.setEditFieldsText(lastName, firstName, phoneNumber);
+				updateDialog.setEditFieldsText(data.lastName(), data.firstName(), data.phoneNumber());
 
 				if (updateDialog.exec())
 				{
 					if (hasAnyLineEditFieldChanged(updateDialog))
 					{
-						lastName = updateDialog.lastNameEdit->text();
-						firstName = updateDialog.firstNameEdit->text();
-						phoneNumber = updateDialog.phoneNumberEdit->text();
+						LastName lastName = updateDialog.lastNameEdit->text();
+						FirstName firstName = updateDialog.firstNameEdit->text();
+						PhoneNumber phoneNumber = updateDialog.phoneNumberEdit->text();
 
 						try
 						{
-							_readModel.updateContact(lastName, firstName, phoneNumber, id.toInt());
+							_readModel.updateContact(lastName, firstName, phoneNumber, id);
 
 							_readModel.updateView();
 						}

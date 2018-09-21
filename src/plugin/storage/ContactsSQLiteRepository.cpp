@@ -44,6 +44,11 @@ ContactsSQLiteRepository::ContactsSQLiteRepository()
 	createMainTable();
 }
 
+ContactsSQLiteRepository::~ContactsSQLiteRepository()
+{
+	_database.close();
+}
+
 void ContactsSQLiteRepository::add(Contact const & item)
 {
 	QSqlQuery query = QueriesManager::createAddPersonQuery(item.lastName(), item.firstName(), item.phoneNumber());

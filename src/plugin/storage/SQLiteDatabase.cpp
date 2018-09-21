@@ -6,6 +6,8 @@
 #include <qsqlquery.h>
 #include <qsqlerror.h>
 
+#include "Contact.h"
+
 auto SQLiteDatabase::open() -> void
 {
 	if (!_database.open())
@@ -26,7 +28,7 @@ auto SQLiteDatabase::createMainTable() -> void
 		throw CouldNotCreateDatabaseTableException(query.lastError().text().toStdString());
 }
 
-auto SQLiteDatabase::addContact(std::string const & lastName, std::string const & firstName, std::string const & phoneNumber) -> void
+auto SQLiteDatabase::addContact(LastName const & lastName, FirstName const & firstName, PhoneNumber const & phoneNumber) -> void
 {
 	QSqlQuery query = QueriesManager::createAddPersonQuery(lastName, firstName, phoneNumber);
 
@@ -42,7 +44,7 @@ auto SQLiteDatabase::addContact(QString const & lastName, QString const & firstN
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
 }
 
-auto SQLiteDatabase::searchContact(std::string const & lastName, std::string const & firstName) -> QSqlQuery
+auto SQLiteDatabase::searchContact(LastName const & lastName, FirstName const & firstName) -> QSqlQuery
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(lastName, firstName);
 
@@ -62,7 +64,7 @@ auto SQLiteDatabase::searchContact(QString const& lastName, QString const& first
 	return query;
 }
 
-auto SQLiteDatabase::updateContact(std::string const & lastName, std::string const & firstName, std::string const & phoneNumber, int const id) -> void
+auto SQLiteDatabase::updateContact(LastName const & lastName, FirstName const & firstName, PhoneNumber const & phoneNumber, ContactId const& id) -> void
 {
 	QSqlQuery query = QueriesManager::createUpdatePersonQuery(lastName, firstName, phoneNumber, id);
 
@@ -78,7 +80,7 @@ auto SQLiteDatabase::updateContact(QString const & lastName, QString const & fir
 		throw CouldNotUpdateContactException(query.lastError().text().toStdString());
 }
 
-auto SQLiteDatabase::deleteContact(int const id) -> void
+auto SQLiteDatabase::deleteContact(ContactId const& id) -> void
 {
 	QSqlQuery query = QueriesManager::createDeletePersonQuery(id);
 	
@@ -86,7 +88,7 @@ auto SQLiteDatabase::deleteContact(int const id) -> void
 		throw CouldNotDeleteContactException(query.lastError().text().toStdString());
 }
 
-auto SQLiteDatabase::retrieveContactData(int const id) -> ContactData
+auto SQLiteDatabase::retrieveContactData(ContactId const& id) -> Contact
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(id);
 
@@ -94,19 +96,17 @@ auto SQLiteDatabase::retrieveContactData(int const id) -> ContactData
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
 	else
 	{
-		QString lastName;
-		QString firstName;
-		QString phoneNumber;
-
 		while (query.next())
 		{
-			lastName = query.value(0).toString();
-			firstName = query.value(1).toString();
-			phoneNumber = query.value(2).toString();
+			LastName lastName = query.value(0).toString();
+			FirstName firstName = query.value(1).toString();
+			PhoneNumber phoneNumber = query.value(2).toString();
+		
+			return Contact(lastName, firstName, phoneNumber);
 		}
 
-		return ContactData(lastName, firstName, phoneNumber);
+		return Contact();
 	}
 
-	return ContactData();
+	return Contact();
 }

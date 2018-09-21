@@ -2,7 +2,12 @@
 
 #include <qsqldatabase.h>
 
-using ContactData = std::tuple<QString, QString, QString>;
+#include "Contact.h"
+
+#include "LastName.h"
+#include "FirstName.h"
+#include "PhoneNumber.h"
+#include "ContactId.h"
 
 class SQLiteDatabase
 {
@@ -20,21 +25,21 @@ public:
 
 	auto createMainTable() -> void;
 
-	auto addContact(std::string const& lastName, std::string const& firstName, std::string const& phoneNumber) -> void;
+	auto addContact(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) -> void;
 	
 	auto addContact(QString const& lastName, QString const& firstName, QString const& phoneNumber) -> void;
 	
-	auto searchContact(std::string const& lastName, std::string const& firstName)->QSqlQuery;
+	auto searchContact(LastName const& lastName, FirstName const& firstName)->QSqlQuery;
 	
 	auto searchContact(QString const& lastName, QString const& firstName) -> QSqlQuery;
 
-	auto updateContact(std::string const& lastName, std::string const& firstName, std::string const& phoneNumber, int const id) -> void;
+	auto updateContact(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber, ContactId const& id) -> void;
 
 	auto updateContact(QString const& lastName, QString const& firstName, QString const& phoneNumber, int const id) -> void;
 
-	auto deleteContact(int const id) -> void;
+	auto deleteContact(ContactId const& id) -> void;
 
-	auto retrieveContactData(int const id)->ContactData;
+	auto retrieveContactData(ContactId const& id)->Contact;
 
 protected:
 	QSqlDatabase _database;

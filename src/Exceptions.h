@@ -5,58 +5,74 @@
 class CouldNotOpenDatabaseException : public std::runtime_error
 {
 public:
-	CouldNotOpenDatabaseException(std::string const& errorMessage);
+	CouldNotOpenDatabaseException(std::string_view errorMessage);
 };
 
 class CouldNotCreateDatabaseException : public std::runtime_error
 {
 public:
-	CouldNotCreateDatabaseException(std::string const& errorMessage);
+	CouldNotCreateDatabaseException(std::string_view errorMessage);
 };
 
 class CouldNotCreateDatabaseInMemoryException : public CouldNotCreateDatabaseException
 {
 public:
-	CouldNotCreateDatabaseInMemoryException(std::string const& errorMessage);
+	CouldNotCreateDatabaseInMemoryException(std::string_view errorMessage);
 };
 
 class CouldNotCreateDatabaseTableException : public std::runtime_error
 {
 public:
-	CouldNotCreateDatabaseTableException(std::string const& errorMessage);
+	CouldNotCreateDatabaseTableException(std::string_view errorMessage);
 };
 
 class CouldNotAddContactException : public std::runtime_error
 {
 public:
-	CouldNotAddContactException (std::string const& errorMessage);
+	CouldNotAddContactException (std::string_view errorMessage);
 };
 
 class CouldNotSearchForTheContactException : public std::runtime_error
 {
 public:
-	CouldNotSearchForTheContactException(std::string const& errorMessage);
+	CouldNotSearchForTheContactException(std::string_view errorMessage);
 };
 
 class CouldNotUpdateContactException : public std::runtime_error
 {
 public:
-	CouldNotUpdateContactException(std::string const& errorMessage);
+	CouldNotUpdateContactException(std::string_view errorMessage);
 };
 
 class CouldNotDeleteContactException : public std::runtime_error
 {
 public:
-	CouldNotDeleteContactException(std::string const& errorMessage);
+	CouldNotDeleteContactException(std::string_view errorMessage);
 };
 
 class NonMatchingDependencyTypeException : public std::runtime_error
 {
 public:
-	NonMatchingDependencyTypeException(std::string const& errorMessage);
+	NonMatchingDependencyTypeException(std::string_view errorMessage);
 };
 
+class InvalidNameException : public std::domain_error
+{
+public:
+	InvalidNameException(std::string_view errorMessage);
+};
 
+class InvalidPhoneNumberException : public std::domain_error
+{
+public:
+	InvalidPhoneNumberException(std::string_view errorMessage);
+};
+
+class InvalidContactId : public std::domain_error
+{
+public:
+	InvalidContactId(std::string_view errorMessage);
+};
 
 
 

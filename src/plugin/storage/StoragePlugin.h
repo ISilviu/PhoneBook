@@ -8,16 +8,22 @@
 class StoragePlugin : public IPlugin
 {
 public:
+	StoragePlugin() = default;
 
-	void init() override;
+	StoragePlugin(StoragePlugin const& other) = delete;
 
-	int run() override;
+	StoragePlugin(StoragePlugin&& other) = delete;
 
-	void shutDown() override;
+	StoragePlugin& operator = (StoragePlugin const& other) = delete;
+
+	StoragePlugin& operator = (StoragePlugin&& other) = delete;
 
 	IRepository<Contact>* getReadModel() noexcept;
 
 private:
+	void init() override {};
+
+	int run() override { return 0; };
 
 	void init(std::vector<IPlugin*> const& dependencies) override {};
 

@@ -2,17 +2,26 @@
 
 #include <QString>
 
+#include "LastName.h"
+#include "FirstName.h"
+#include "PhoneNumber.h"
+
 class Contact
 {
 public:
-	constexpr Contact(QString const& lastName, QString const& firstName, QString const& phoneNumber);
+	Contact() = default;
 
+	Contact(QString const& lastName, QString const& firstName, QString const& phoneNumber) noexcept;
+
+	Contact(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) noexcept;
+	
 	constexpr auto lastName() const noexcept->QString const&;
 
 	constexpr auto firstName() const noexcept->QString const&;
 
 	constexpr auto phoneNumber() const noexcept->QString const&;
 
+	auto isEmpty() const noexcept -> bool;
 
 private:
 	QString _lastName;
@@ -21,12 +30,6 @@ private:
 
 	QString _phoneNumber;
 };
-
-inline constexpr Contact::Contact(QString const & lastName, QString const & firstName, QString const & phoneNumber)
-	:_lastName(lastName),
-	_firstName(firstName),
-	_phoneNumber(phoneNumber)
-{}
 
 inline constexpr auto Contact::lastName() const noexcept -> QString const&
 {
@@ -42,5 +45,6 @@ inline constexpr auto Contact::phoneNumber() const noexcept -> QString const&
 {
 	return _phoneNumber;
 }
+
 
 

@@ -1,44 +1,54 @@
 #include "Exceptions.h"
 
-CouldNotOpenDatabaseException::CouldNotOpenDatabaseException(std::string const& errorMessage)
-	:std::runtime_error(errorMessage)
+CouldNotOpenDatabaseException::CouldNotOpenDatabaseException(std::string_view errorMessage)
+	:std::runtime_error(errorMessage.data())
 {}
 
-CouldNotCreateDatabaseException::CouldNotCreateDatabaseException(std::string const& errorMessage)
-	: std::runtime_error(errorMessage)
-{}
-
-
-
-CouldNotCreateDatabaseInMemoryException::CouldNotCreateDatabaseInMemoryException(std::string const & errorMessage)
-	: CouldNotCreateDatabaseException(errorMessage)
+CouldNotCreateDatabaseException::CouldNotCreateDatabaseException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
 {}
 
 
-CouldNotCreateDatabaseTableException::CouldNotCreateDatabaseTableException(std::string const & errorMessage)
-	: std::runtime_error(errorMessage)
+CouldNotCreateDatabaseInMemoryException::CouldNotCreateDatabaseInMemoryException(std::string_view errorMessage)
+	: CouldNotCreateDatabaseException(errorMessage.data())
 {}
 
 
-CouldNotAddContactException::CouldNotAddContactException(std::string const& errorMessage)
-	: std::runtime_error(errorMessage)
-{}
-
-CouldNotSearchForTheContactException::CouldNotSearchForTheContactException(std::string const& errorMessage)
-	: std::runtime_error(errorMessage)
+CouldNotCreateDatabaseTableException::CouldNotCreateDatabaseTableException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
 {}
 
 
-CouldNotUpdateContactException::CouldNotUpdateContactException(std::string const& errorMessage)
-	: std::runtime_error(errorMessage)
+CouldNotAddContactException::CouldNotAddContactException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
 {}
 
-CouldNotDeleteContactException::CouldNotDeleteContactException(std::string const & errorMessage)
-	: std::runtime_error(errorMessage)
+CouldNotSearchForTheContactException::CouldNotSearchForTheContactException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
 {}
 
 
-NonMatchingDependencyTypeException::NonMatchingDependencyTypeException(std::string const & errorMessage)
-	: std::runtime_error(errorMessage)
+CouldNotUpdateContactException::CouldNotUpdateContactException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
 {}
 
+CouldNotDeleteContactException::CouldNotDeleteContactException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
+{}
+
+
+NonMatchingDependencyTypeException::NonMatchingDependencyTypeException(std::string_view errorMessage)
+	: std::runtime_error(errorMessage.data())
+{}
+
+InvalidNameException::InvalidNameException(std::string_view errorMessage)
+	: std::domain_error(errorMessage.data())
+{}
+
+InvalidPhoneNumberException::InvalidPhoneNumberException(std::string_view errorMessage)
+	: std::domain_error(errorMessage.data())
+{}
+
+InvalidContactId::InvalidContactId(std::string_view errorMessage)
+	: std::domain_error(errorMessage.data())
+{}

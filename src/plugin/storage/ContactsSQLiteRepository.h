@@ -12,6 +12,9 @@ class ContactsSQLiteRepository : public IRepository<Contact>
 public:
 	ContactsSQLiteRepository();
 
+	~ContactsSQLiteRepository();
+
+
 	void add(Contact const& item) override;
 
 	void remove(int const id) override;
