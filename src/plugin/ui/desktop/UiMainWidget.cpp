@@ -37,12 +37,12 @@ void UiMainWidget::init(InMemorySQLiteDatabase const& readModel)
 
 auto UiMainWidget::areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) const noexcept -> bool
 {
-	return (!lastName.get().isEmpty() && !firstName.get().isEmpty() && !phoneNumber.get().isEmpty());
+	return (!lastName.get().empty() && !firstName.get().empty() && !phoneNumber.get().empty());
 }
 
 auto UiMainWidget::areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName) const noexcept ->bool
 {
-	return (!lastName.get().isEmpty() && !firstName.get().isEmpty());
+	return (!lastName.get().empty() && !firstName.get().empty());
 }
 
 auto UiMainWidget::hasAnyLineEditFieldChanged(AddDialog const & dialog) const noexcept -> bool
@@ -55,15 +55,15 @@ void UiMainWidget::on_addButton_clicked()
 	AddDialog dialog(this);
 	if (dialog.exec())
 	{
-		LastName lastName = dialog.lastNameEdit->text();
-		FirstName firstName = dialog.firstNameEdit->text();
-		PhoneNumber phoneNumber = dialog.phoneNumberEdit->text();
+		LastName lastName = dialog.lastNameEdit->text().toStdString();
+		FirstName firstName = dialog.firstNameEdit->text().toStdString();
+		PhoneNumber phoneNumber = dialog.phoneNumberEdit->text().toStdString();
 
 		if (areAllLineEditFieldsFilled(lastName, firstName, phoneNumber))
 		{
 			try
 			{
-				_readModel.addContact(lastName.get(), firstName.get(), phoneNumber.get());
+				_readModel.addContact(lastName, firstName, phoneNumber);
 
 				_readModel.updateView();
 			}
@@ -82,8 +82,8 @@ void UiMainWidget::on_searchButton_clicked()
 	SearchDialog dialog(this);
 	if (dialog.exec())
 	{
-		LastName lastName = dialog.lastNameEdit->text();
-		FirstName firstName = dialog.firstNameEdit->text();
+		LastName lastName = dialog.lastNameEdit->text().toStdString();
+		FirstName firstName = dialog.firstNameEdit->text().toStdString();
 
 		if (areAllLineEditFieldsFilled(lastName, firstName))
 		{
@@ -120,15 +120,16 @@ void UiMainWidget::on_updateButton_clicked()
 			if (!data.isEmpty())
 			{
 				AddDialog updateDialog(&dialog);
-				updateDialog.setEditFieldsText(data.lastName(), data.firstName(), data.phoneNumber());
+				updateDialog.setEditFieldsText(QString::fromUtf8(data.lastName().c_str())
+					,QString::fromUtf8(data.firstName().c_str()), QString::fromUtf8(data.phoneNumber().c_str()));
 
 				if (updateDialog.exec())
 				{
 					if (hasAnyLineEditFieldChanged(updateDialog))
 					{
-						LastName lastName = updateDialog.lastNameEdit->text();
-						FirstName firstName = updateDialog.firstNameEdit->text();
-						PhoneNumber phoneNumber = updateDialog.phoneNumberEdit->text();
+						LastName lastName = updateDialog.lastNameEdit->text().toStdString();
+						FirstName firstName = updateDialog.firstNameEdit->text().toStdString();
+						PhoneNumber phoneNumber = updateDialog.phoneNumberEdit->text().toStdString();
 
 						try
 						{

@@ -7,7 +7,9 @@
 
 ContactId::ContactId(int const id)
 	:_id(id)
-{}
+{
+	validate();
+}
 
 auto ContactId::validate() const -> void
 {

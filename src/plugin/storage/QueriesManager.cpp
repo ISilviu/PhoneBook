@@ -17,9 +17,11 @@ auto QueriesManager::createAddPersonQuery(LastName const& lastName, FirstName co
 
 	query.prepare(addPersonTemplate);
 
-	query.addBindValue(lastName.get());
-	query.addBindValue(firstName.get());
-	query.addBindValue(phoneNumber.get());
+	const std::string string{ "Das" };
+
+	query.addBindValue(QString::fromUtf8(lastName.get().c_str()));
+	query.addBindValue(QString::fromUtf8(firstName.get().c_str()));
+	query.addBindValue(QString::fromUtf8(phoneNumber.get().c_str()));
 
 	return query;
 }
@@ -31,7 +33,7 @@ auto QueriesManager::createAddPersonQuery(LastName const& lastName, FirstName co
 //
 //	query.prepare(addPersonTemplate);
 //
-//	query.addBindValue(lastName);
+//	query.addBindValue(lastNaQString::fromUtf8(lastName.get().c_str())me);
 //	query.addBindValue(firstName);
 //	query.addBindValue(phoneNumber);
 //
@@ -44,8 +46,8 @@ auto QueriesManager::createSearchPersonQuery(LastName const& lastName, FirstName
 	QSqlQuery query;
 
 	query.prepare(searchPersonTemplate);
-	query.addBindValue(lastName.get());
-	query.addBindValue(firstName.get());
+	query.addBindValue(QString::fromUtf8(lastName.get().c_str()));
+	query.addBindValue(QString::fromUtf8(firstName.get().c_str()));
 
 	return query;
 }
@@ -90,9 +92,9 @@ auto QueriesManager::createUpdatePersonQuery(LastName const& lastName, FirstName
 	QSqlQuery query;
 	
 	query.prepare(updatePersonTemplate);
-	query.addBindValue(lastName.get());
-	query.addBindValue(firstName.get());
-	query.addBindValue(phoneNumber.get());
+	query.addBindValue(QString::fromUtf8(lastName.get().c_str()));
+	query.addBindValue(QString::fromUtf8(firstName.get().c_str()));
+	query.addBindValue(QString::fromUtf8(phoneNumber.get().c_str()));
 	query.addBindValue(id.get());
 
 	return query;

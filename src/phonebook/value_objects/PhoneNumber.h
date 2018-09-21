@@ -1,21 +1,21 @@
 #pragma once
 
-#include <qstring.h>
+#include <string>
 
 class PhoneNumber
 {
 public:
-	PhoneNumber(QString const& phoneNumber);
+	PhoneNumber(std::string_view phoneNumber);
 
-	constexpr auto get() const noexcept->QString const&;
+	constexpr auto get() const noexcept->std::string const&;
 
 private:
 	auto validate() const -> void;
 
-	QString _phoneNumber;
+	std::string _phoneNumber;
 };
 
-inline constexpr auto PhoneNumber::get() const noexcept -> QString const &
+inline constexpr auto PhoneNumber::get() const noexcept -> std::string const &
 {
 	return _phoneNumber;
 }

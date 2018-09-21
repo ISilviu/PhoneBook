@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QString>
-
 #include "LastName.h"
 #include "FirstName.h"
 #include "PhoneNumber.h"
@@ -11,37 +9,37 @@ class Contact
 public:
 	Contact() = default;
 
-	Contact(QString const& lastName, QString const& firstName, QString const& phoneNumber) noexcept;
+	Contact(std::string_view lastName, std::string_view firstName, std::string_view phoneNumber) noexcept;
 
 	Contact(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) noexcept;
 	
-	constexpr auto lastName() const noexcept->QString const&;
+	constexpr auto lastName() const noexcept->std::string const&;
 
-	constexpr auto firstName() const noexcept->QString const&;
+	constexpr auto firstName() const noexcept->std::string  const&;
 
-	constexpr auto phoneNumber() const noexcept->QString const&;
+	constexpr auto phoneNumber() const noexcept->std::string  const&;
 
 	auto isEmpty() const noexcept -> bool;
 
 private:
-	QString _lastName;
+	std::string _lastName;
 
-	QString _firstName;
+	std::string _firstName;
 
-	QString _phoneNumber;
+	std::string _phoneNumber;
 };
 
-inline constexpr auto Contact::lastName() const noexcept -> QString const&
+inline constexpr auto Contact::lastName() const noexcept -> std::string  const&
 {
 	return _lastName;
 }
 
-inline constexpr auto Contact::firstName() const noexcept -> QString const&
+inline constexpr auto Contact::firstName() const noexcept -> std::string  const&
 {
 	return _firstName;
 }
 
-inline constexpr auto Contact::phoneNumber() const noexcept -> QString const&
+inline constexpr auto Contact::phoneNumber() const noexcept -> std::string  const&
 {
 	return _phoneNumber;
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <qstring.h>
-
 class ContactId
 {
 public:

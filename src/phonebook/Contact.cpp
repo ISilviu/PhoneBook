@@ -1,12 +1,10 @@
 #include "Contact.h"
 
-Contact::Contact(QString const & lastName, QString const & firstName, QString const & phoneNumber) noexcept
+Contact::Contact(std::string_view lastName, std::string_view firstName, std::string_view phoneNumber) noexcept
 	:_lastName(lastName),
 	_firstName(firstName),
 	_phoneNumber(phoneNumber)
 {}
-
-
 
 Contact::Contact(LastName const & lastName, FirstName const & firstName, PhoneNumber const & phoneNumber) noexcept
 	: _lastName(lastName.get()),
@@ -17,5 +15,5 @@ Contact::Contact(LastName const & lastName, FirstName const & firstName, PhoneNu
 
 auto Contact::isEmpty() const noexcept -> bool
 {
-	return (_lastName.isEmpty() && _firstName.isEmpty() && _phoneNumber.isEmpty());
+	return (_lastName.empty() && _firstName.empty() && _phoneNumber.empty());
 }

@@ -1,21 +1,21 @@
 #pragma once
 
-#include <qstring.h>
+#include <string>
 
 class FirstName
 {
 public:
-	FirstName(QString const& firstName);
+	FirstName(std::string_view firstName);
 
-	constexpr auto get() const noexcept->QString const&;
+	constexpr auto get() const noexcept->std::string const&;
 
 private:
 	auto validate() const -> void;
 
-	QString _firstName;
+	std::string _firstName;
 };
 
-inline constexpr auto FirstName::get() const noexcept -> QString const &
+inline constexpr auto FirstName::get() const noexcept -> std::string const &
 {
 	return _firstName;
 }
