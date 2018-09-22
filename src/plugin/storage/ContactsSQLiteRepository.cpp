@@ -51,7 +51,8 @@ ContactsSQLiteRepository::~ContactsSQLiteRepository()
 
 void ContactsSQLiteRepository::add(Contact const & item)
 {
-	QSqlQuery query = QueriesManager::createAddPersonQuery(item.lastName(), item.firstName(), item.phoneNumber());
+	QSqlQuery query = QueriesManager::createAddPersonQuery(LastName(item.lastName())
+		, FirstName(item.firstName()), PhoneNumber(item.phoneNumber()));
 
 	if (!query.exec())
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
@@ -67,7 +68,8 @@ void ContactsSQLiteRepository::remove(int const id)
 
 void ContactsSQLiteRepository::update(Contact const & newProperties, int const id)
 {
-	QSqlQuery query = QueriesManager::createUpdatePersonQuery(newProperties.lastName(), newProperties.firstName(), newProperties.phoneNumber(), id);
+	QSqlQuery query = QueriesManager::createUpdatePersonQuery(LastName(newProperties.lastName())
+		, FirstName(newProperties.firstName()), PhoneNumber(newProperties.phoneNumber()), id);
 
 	if (!query.exec())
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
@@ -75,8 +77,7 @@ void ContactsSQLiteRepository::update(Contact const & newProperties, int const i
 
 std::vector<Contact> ContactsSQLiteRepository::search(Contact const & item)
 {
-	QSqlQuery query = QueriesManager::createSearchPersonQuery(
-		item.lastName(), item.firstName());
+	QSqlQuery query = QueriesManager::createSearchPersonQuery(LastName(item.lastName()), FirstName(item.firstName()));
 
 	if (!query.exec())
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
@@ -84,15 +85,11 @@ std::vector<Contact> ContactsSQLiteRepository::search(Contact const & item)
 	{
 		std::vector<Contact> contacts;
 
-		QString lastName;
-		QString firstName;
-		QString phoneNumber;
-
 		while (query.next())
 		{
-			lastName = query.value("lastname").toString();
-			firstName = query.value("firstname").toString();
-			phoneNumber = query.value("phonenumber").toString();
+			LastName lastName = query.value("lastname").toString().toStdString();
+			FirstName firstName = query.value("firstname").toString().toStdString();
+			PhoneNumber phoneNumber = query.value("phonenumber").toString().toStdString();
 
 			Contact contact(lastName, firstName, phoneNumber);
 
@@ -115,15 +112,11 @@ std::vector<Contact> ContactsSQLiteRepository::listAll()
 	{
 		std::vector<Contact> contacts;
 
-		QString lastName;
-		QString firstName;
-		QString phoneNumber;
-
 		while (query.next())
 		{
-			lastName = query.value("lastname").toString();
-			firstName = query.value("firstname").toString();
-			phoneNumber = query.value("phonenumber").toString();
+			LastName lastName = query.value("lastname").toString().toStdString();
+			FirstName firstName = query.value("firstname").toString().toStdString();
+			PhoneNumber phoneNumber = query.value("phonenumber").toString().toStdString();
 
 			Contact contact(lastName, firstName, phoneNumber);
 

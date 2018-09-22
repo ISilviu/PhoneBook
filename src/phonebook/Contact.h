@@ -9,8 +9,6 @@ class Contact
 public:
 	Contact() = default;
 
-	Contact(std::string_view lastName, std::string_view firstName, std::string_view phoneNumber) noexcept;
-
 	Contact(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) noexcept;
 	
 	constexpr auto lastName() const noexcept->std::string const&;
