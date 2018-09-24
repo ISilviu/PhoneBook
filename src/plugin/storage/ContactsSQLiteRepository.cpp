@@ -75,7 +75,7 @@ void ContactsSQLiteRepository::update(Contact const & newProperties, int const i
 		throw CouldNotAddContactException(query.lastError().text().toStdString());
 }
 
-std::vector<Contact> ContactsSQLiteRepository::search(Contact const & item)
+PhoneBook const ContactsSQLiteRepository::search(Contact const & item)
 {
 	QSqlQuery query = QueriesManager::createSearchPersonQuery(LastName(item.lastName()), FirstName(item.firstName()));
 
@@ -83,26 +83,27 @@ std::vector<Contact> ContactsSQLiteRepository::search(Contact const & item)
 		throw CouldNotSearchForTheContactException(query.lastError().text().toStdString());
 	else
 	{
-		std::vector<Contact> contacts;
+		PhoneBook phoneBook;
 
 		while (query.next())
 		{
+			ContactId id = query.value("id").toInt();
 			LastName lastName = query.value("lastname").toString().toStdString();
 			FirstName firstName = query.value("firstname").toString().toStdString();
 			PhoneNumber phoneNumber = query.value("phonenumber").toString().toStdString();
 
 			Contact contact(lastName, firstName, phoneNumber);
 
-			contacts.push_back(contact);
+			phoneBook.add(id, contact);
 		}
 
-		return contacts;
+		return phoneBook;
 	}
 
-	return std::vector<Contact>();
+	return PhoneBook();
 }
 
-std::vector<Contact> ContactsSQLiteRepository::listAll()
+PhoneBook const ContactsSQLiteRepository::listAll()
 {
 	QSqlQuery query = QueriesManager::createDefaultUpdateViewQuery();
 
@@ -110,22 +111,23 @@ std::vector<Contact> ContactsSQLiteRepository::listAll()
 		throw; //to be added
 	else
 	{
-		std::vector<Contact> contacts;
+		PhoneBook phoneBook;
 
 		while (query.next())
 		{
+			ContactId id = query.value("id").toInt();
 			LastName lastName = query.value("lastname").toString().toStdString();
 			FirstName firstName = query.value("firstname").toString().toStdString();
 			PhoneNumber phoneNumber = query.value("phonenumber").toString().toStdString();
 
 			Contact contact(lastName, firstName, phoneNumber);
 
-			contacts.push_back(contact);
+			phoneBook.add(id, contact);
 		}
 
-		return contacts;
+		return phoneBook;
 	}
 
-	return std::vector<Contact>();
+	return PhoneBook();
 }
 

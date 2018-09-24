@@ -3,19 +3,16 @@
 #include "UiPlugin.h"
 #include "InMemorySQLiteStoragePlugin.h"
 
-#include <QtWidgets/QApplication>
-
 #include "Exceptions.h"
+
+#include "Contact.h"
+
 
 int main(int argc, char *argv[])
 {
-	PhoneBook phoneBookApplication;
-
 	InMemorySQLiteStoragePlugin storagePlugin;
-	phoneBookApplication.addPlugin(&storagePlugin);	
 
 	UiPlugin uiPlugin(argc, argv);
-	phoneBookApplication.addPlugin(&uiPlugin);
 
 	storagePlugin.init();
 

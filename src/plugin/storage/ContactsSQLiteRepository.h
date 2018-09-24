@@ -4,16 +4,17 @@
 
 #include "Contact.h"
 
+#include "PhoneBook.h"
+
 #include <qsqlquerymodel.h>
 #include <qsqldatabase.h>
 
-class ContactsSQLiteRepository : public IRepository<Contact>
+class ContactsSQLiteRepository : public IRepository<Contact, PhoneBook>
 {
 public:
 	ContactsSQLiteRepository();
 
 	~ContactsSQLiteRepository();
-
 
 	void add(Contact const& item) override;
 
@@ -21,9 +22,9 @@ public:
 
 	void update(Contact const& newProperties, int const id) override;
 
-	std::vector<Contact> search(Contact const& item) override;
+	PhoneBook const search(Contact const& item) override;
 
-	std::vector<Contact> listAll() override;
+	PhoneBook const listAll() override;
 
 private:
 

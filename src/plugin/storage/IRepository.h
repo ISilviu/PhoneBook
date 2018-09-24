@@ -2,7 +2,7 @@
 
 #include <vector>
 
-template <typename T>
+template <typename T, typename Container>
 class IRepository
 {
 public:
@@ -14,9 +14,9 @@ public:
 
 	virtual void update(T const& newProperties, int const id) = 0;
 
-	virtual std::vector<T> search(T const& item) = 0;
+	virtual Container const search(T const& item) = 0;
 
-	virtual std::vector<T> listAll() = 0;
+	virtual Container const listAll() = 0;
 };
 
 

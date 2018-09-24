@@ -1,6 +1,11 @@
-#include "phonebook.h"
+#include "PhoneBook.h"
 
-auto PhoneBook::addPlugin(IPlugin* plugin) noexcept -> void
+void PhoneBook::add(ContactId const & id, Contact const & contact)
 {
-	_plugins.push_back(plugin);
+	_contacts.insert(std::make_pair(id, contact));
+}
+
+void PhoneBook::add(std::pair<ContactId, Contact> const & contact)
+{
+	_contacts.insert(contact);
 }
