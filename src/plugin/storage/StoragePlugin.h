@@ -18,7 +18,9 @@ public:
 
 	StoragePlugin& operator = (StoragePlugin&& other) = delete;
 
-	IRepository<Contact>* getReadModel() noexcept;
+	IRepository<Contact, PhoneBook>* getReadModel() noexcept;
+
+	std::vector<std::string> getDependencies() const override;
 
 private:
 	void init() override {};

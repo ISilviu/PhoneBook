@@ -1,5 +1,4 @@
 #include "UiMainWidget.h"
-#include "Exceptions.h"
 
 #include "adddialog.h"
 #include "searchdialog.h"

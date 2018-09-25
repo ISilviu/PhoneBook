@@ -11,6 +11,11 @@
 
 #include "InMemorySQLiteStoragePlugin.h"
 
+#include "LastName.h"
+#include "FirstName.h"
+#include "PhoneNumber.h"
+#include "ContactId.h"
+
 class UiMainWidget : public QWidget
 {
 	Q_OBJECT
@@ -18,13 +23,13 @@ class UiMainWidget : public QWidget
 public:
 	explicit UiMainWidget(QWidget* parent = Q_NULLPTR);
 
-	void init(InMemorySQLiteDatabase& readModel);
+	void init(InMemorySQLiteDatabase const& readModel);
 
 private:
 
-	auto areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName, QString const& phoneNumber) const noexcept -> bool;
+	auto areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName, PhoneNumber const& phoneNumber) const noexcept -> bool;
 	
-	auto areAllLineEditFieldsFilled(QString const& lastName, QString const& firstName) const noexcept -> bool;
+	auto areAllLineEditFieldsFilled(LastName const& lastName, FirstName const& firstName) const noexcept -> bool;
 	
 	auto hasAnyLineEditFieldChanged(AddDialog const& dialog) const noexcept -> bool;
 

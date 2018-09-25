@@ -3,8 +3,6 @@
 #include "UiPlugin.h"
 #include "InMemorySQLiteStoragePlugin.h"
 
-#include "Exceptions.h"
-
 #include "Contact.h"
 
 #include "PhoneBook.h"

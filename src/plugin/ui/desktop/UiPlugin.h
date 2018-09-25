@@ -6,6 +6,16 @@
 #include "IPlugin.h"
 #include "UiMainWidget.h"
 
+#include <array>
+
+namespace
+{
+	inline constexpr auto dependencies = std::array
+	{
+		std::string_view{"class InMemorySQLiteStoragePlugin"}
+	};
+};
+
 class UiPlugin : public IPlugin
 {
 public:
@@ -15,20 +25,18 @@ public:
 
 	int run() override;
 
-	void shutDown() override;
+	std::vector<std::string> getDependencies() const override;
 
 private:
 	auto checkForNonMatchingDependencies(std::vector<IPlugin*> const& dependencies) const -> void;
 
-	auto initializeDependencies() noexcept -> void;
-
 	void init() override {};
-
-	std::vector<IPlugin*> _dependencies;
-
-	InMemorySQLiteDatabase _readModel;
 
 	QApplication _application;
 
 	UiMainWidget _widget;
+
+	InMemorySQLiteDatabase _readModel;
+
+	const std::vector<std::string> _dependencies{ dependencies.cbegin(), dependencies.cend() };
 };
