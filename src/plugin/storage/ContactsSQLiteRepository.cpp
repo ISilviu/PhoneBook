@@ -5,7 +5,7 @@
 
 #include "QueriesManager.h"
 
-#include "Exceptions.h"
+#include "StoragePluginSpecificExceptions.h"
 
 void ContactsSQLiteRepository::addDriver(QString const & driver)
 {
