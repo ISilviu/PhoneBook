@@ -17,10 +17,7 @@
 #include "ContactId.h"
 #include "Contact.h"
 
-//std::vector<IPlugin*> UiMainWidget::getDependencies() const
-//{
-//	return _dependencies;
-//}
+#include "StoragePluginSpecificExceptions.h"
 
 UiMainWidget::UiMainWidget(QWidget* parent)
 	:QWidget(parent)

@@ -1,5 +1,6 @@
 #include "UiPlugin.h"
-#include "Exceptions.h"
+
+#include "UiPluginSpecificExceptions.h"
 
 UiPlugin::UiPlugin(int argc, char* argv[], QWidget* parent)
 	: _application(argc, argv),

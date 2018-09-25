@@ -2,7 +2,7 @@
 
 #include <regex>
 
-#include "Exceptions.h"
+#include "DomainModelSpecificExceptions.h"
 
 
 ContactId::ContactId(int const id)

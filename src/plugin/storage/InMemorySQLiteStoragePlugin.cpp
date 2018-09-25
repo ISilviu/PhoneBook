@@ -1,10 +1,6 @@
 #include "InMemorySQLiteStoragePlugin.h"
-#include "Exceptions.h"
 
-//std::vector<IPlugin*> InMemorySQLiteStoragePlugin::getDependencies() const
-//{
-//	return _dependencies;
-//}
+#include "StoragePluginSpecificExceptions.h"
 
 void InMemorySQLiteStoragePlugin::init()
 {
@@ -34,9 +30,14 @@ int InMemorySQLiteStoragePlugin::run()
 	}
 }
 
-void InMemorySQLiteStoragePlugin::shutDown()
+InMemorySQLiteDatabase const & InMemorySQLiteStoragePlugin::getReadModel() const noexcept
 {
-	_database.close();
+	return _database;
+}
+
+std::vector<std::string> InMemorySQLiteStoragePlugin::getDependencies() const
+{
+	return std::vector<std::string>();
 }
 
 

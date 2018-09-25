@@ -1,6 +1,6 @@
 #include "SQLiteDatabase.h"
 
-#include "Exceptions.h"
+#include "StoragePluginSpecificExceptions.h"
 #include "QueriesManager.h"
 
 #include <qsqlquery.h>
