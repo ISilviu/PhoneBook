@@ -18,21 +18,13 @@
 
 int main(int argc, char *argv[])
 {
+	Application application;
 
-	std::vector<std::pair<int, int>> edges{ {0,1}, {2,0} };
+	UiPluginSpecification ui;
+	application.addPluginSpecification(&ui);
 
-	Graph myGraph(3, edges.begin(), edges.end());
+	InMemorySQLiteStoragePluginSpecification storage;
+	application.addPluginSpecification(&storage);
 
-	auto sorted = myGraph.topologicalSort();
-	//Application application;
-
-
-	//UiPluginSpecification ui;
-	//application.addPluginSpecification(&ui);
-
-	//InMemorySQLiteStoragePluginSpecification storage;
-	//application.addPluginSpecification(&storage);
-
-
-	//return application.run();
+	return application.run();
 }
