@@ -1,23 +1,37 @@
 #pragma once
 
+#include "IPluginSpecification.h"
 #include "IPlugin.h"
+
+#include <unordered_map>
 
 class Application
 {
 public:
-	auto addPlugin(IPlugin* plugin) noexcept -> void;
+	Application() = default;
+
+	Application(Application const& other) = delete;
+	Application& operator = (Application const& other) = delete;
+	Application(Application&& other) = delete;
+	Application& operator = (Application&& other) = delete;
+
+	auto addPluginSpecification(IPluginSpecification* specification) noexcept -> void;
 
 	auto run()->int;
 
-private:
-	auto scanForNeededDependencies() noexcept->void;
+	~Application();
 
-	auto initiatePlugins(std::vector<int> const& topologicallySorted)-> void;
+private:
+	auto scanForNeededSpecifications() noexcept -> void;
+
+	auto instantiatePlugins(std::vector<int> const& topologicallySorted)-> void;
 
 	auto runPlugins(std::vector<int> const& topologicallySorted) -> void;
 
 	std::vector<std::pair<int, int>> _dependencies;
 
-	std::vector<IPlugin*> _plugins;
+	std::unordered_map<int, IPlugin*> _plugins;
+
+	std::vector<IPluginSpecification*> _specifications;
 };
 

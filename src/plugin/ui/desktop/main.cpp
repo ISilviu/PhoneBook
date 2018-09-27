@@ -11,15 +11,28 @@
 
 #include "Application.h"
 
+#include "InMemorySQLiteStoragePluginSpecification.h"
+#include "UiPluginSpecification.h"
+
+#include "Graph.h"
+
 int main(int argc, char *argv[])
 {
-	Application application;
 
-	InMemorySQLiteStoragePlugin storagePlugin;
-	application.addPlugin(&storagePlugin);
+	std::vector<std::pair<int, int>> edges{ {0,1}, {2,0} };
 
-	UiPlugin uiPlugin(argc, argv);
-	application.addPlugin(&uiPlugin);
-	
-	return application.run();
+	Graph myGraph(3, edges.begin(), edges.end());
+
+	auto sorted = myGraph.topologicalSort();
+	//Application application;
+
+
+	//UiPluginSpecification ui;
+	//application.addPluginSpecification(&ui);
+
+	//InMemorySQLiteStoragePluginSpecification storage;
+	//application.addPluginSpecification(&storage);
+
+
+	//return application.run();
 }

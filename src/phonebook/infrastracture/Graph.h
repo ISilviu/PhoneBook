@@ -2,8 +2,6 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include <deque>
-
 class Graph
 {
 public:

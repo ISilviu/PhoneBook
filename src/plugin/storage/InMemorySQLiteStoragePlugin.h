@@ -8,17 +8,14 @@
 class InMemorySQLiteStoragePlugin : public IPlugin
 {
 public:
-
-	void init() override;
+	InMemorySQLiteStoragePlugin();
 
 	int run() override;
 
 	InMemorySQLiteDatabase const& getReadModel() const noexcept;
 
-	std::vector<std::string> getDependencies() const override;
-
 private:
-	void init(std::vector<IPlugin*> const& dependencies) override {};
+	void init();
 
 	InMemorySQLiteDatabase _database;
 };

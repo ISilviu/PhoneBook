@@ -2,10 +2,11 @@
 
 #include "UiPluginSpecificExceptions.h"
 
-UiPlugin::UiPlugin(int argc, char* argv[], QWidget* parent)
+UiPlugin::UiPlugin(int argc, char * argv[], std::vector<IPlugin*> const & dependencies, QWidget * parent)
 	: _application(argc, argv),
 	_widget(parent)
 {
+	init(dependencies);
 }
 
 int UiPlugin::run()
@@ -23,23 +24,9 @@ int UiPlugin::run()
 	}
 }
 
-std::vector<std::string> UiPlugin::getDependencies() const
-{
-	return _dependencies;
-}
-
-auto UiPlugin::checkForNonMatchingDependencies(std::vector<IPlugin*> const & dependencies) const -> void
-{
-	for (auto index = 0; index < _dependencies.size(); ++index)
-	{
-		if (typeid(dependencies[index]).name() != typeid(_dependencies[index]).name());
-			//throw NonMatchingDependencyTypeException("Needed plugin not found.");
-	}
-}
-
 void UiPlugin::init(std::vector<IPlugin*> const& dependencies)
 {
-	checkForNonMatchingDependencies(dependencies);
+	//checkForNonMatchingDependencies(dependencies);
 
 	auto storagePlugin = dynamic_cast<InMemorySQLiteStoragePlugin*>(dependencies.front());
 

@@ -20,14 +20,8 @@ public:
 
 	IRepository<Contact, PhoneBook>* getReadModel() noexcept;
 
-	std::vector<std::string> getDependencies() const override;
-
 private:
-	void init() override {};
-
 	int run() override { return 0; };
-
-	void init(std::vector<IPlugin*> const& dependencies) override {};
 
 	ContactsSQLiteRepository _repository;
 };

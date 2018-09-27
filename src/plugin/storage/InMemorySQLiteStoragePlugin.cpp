@@ -11,6 +11,11 @@ void InMemorySQLiteStoragePlugin::init()
 	_database.open();
 }
 
+InMemorySQLiteStoragePlugin::InMemorySQLiteStoragePlugin()
+{
+	init();
+}
+
 int InMemorySQLiteStoragePlugin::run()
 {
 	constexpr int isRunningSpecifier{ 1 };
@@ -34,10 +39,4 @@ InMemorySQLiteDatabase const & InMemorySQLiteStoragePlugin::getReadModel() const
 {
 	return _database;
 }
-
-std::vector<std::string> InMemorySQLiteStoragePlugin::getDependencies() const
-{
-	return std::vector<std::string>();
-}
-
 

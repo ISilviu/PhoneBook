@@ -4,37 +4,43 @@
 
 #include "Graph.h"
 
-auto Application::addPlugin(IPlugin* plugin) noexcept -> void
+auto Application::addPluginSpecification(IPluginSpecification * specification) noexcept -> void
 {
-	_plugins.push_back(plugin); 
+	_specifications.push_back(specification);
 }
 
 auto Application::run() -> int
 {
-	scanForNeededDependencies();
+	scanForNeededSpecifications();
 
 	Graph graph(_plugins.size(), _dependencies.begin(), _dependencies.end());
-	auto topologicallySorted = graph.topologicalSort();
+	auto const topologicallySorted = graph.topologicalSort();
 
-	initiatePlugins(topologicallySorted);
+	instantiatePlugins(topologicallySorted);
 	
 	runPlugins(topologicallySorted);
 
 	return 1;
 }
 
-auto Application::scanForNeededDependencies() noexcept -> void
+Application::~Application()
 {
-	for (auto index = 0; index < _plugins.size(); ++index)
+	std::for_each(_plugins.begin(), _plugins.end(),
+		[this](auto& pair) {delete pair.second; });
+}
+
+auto Application::scanForNeededSpecifications() noexcept -> void
+{
+	for (auto index = 0; index < _specifications.size(); ++index)
 	{
-		std::vector<std::string> currentPluginDependencies = _plugins[index]->getDependencies();
-		if (!currentPluginDependencies.empty())
+		auto currentDependencies = _specifications[index]->getDependencies();
+		if (!currentDependencies.empty())
 		{
-			for (auto index1 = 0; index < _plugins.size(); ++index)
+			for (auto index1 = 0; index1 < _specifications.size(); ++index1)
 			{
-				for (auto const& dependency : currentPluginDependencies)
+				for (auto const& dependency : currentDependencies)
 				{
-					if (dependency == typeid(*_plugins[index1]).name())
+					if (dependency == typeid(*_specifications[index1]).name())
 						_dependencies.push_back(std::make_pair(index, index1));
 				}
 			}
@@ -42,22 +48,21 @@ auto Application::scanForNeededDependencies() noexcept -> void
 	}
 }
 
-auto Application::initiatePlugins(std::vector<int> const & topologicallySorted) -> void
+auto Application::instantiatePlugins(std::vector<int> const& topologicallySorted) -> void
 {
-	for (auto currentPluginIndex = 0; currentPluginIndex < topologicallySorted.size(); ++currentPluginIndex)
+	for (auto const& pluginSpecificationIndex : topologicallySorted)
 	{
 		std::vector<IPlugin*> dependenciesSupplier;
-
-		for (auto const&[pluginIndex, dependencyIndex] : _dependencies)
+		for (auto const&[index1, index2] : _dependencies)
 		{
-			if (currentPluginIndex == pluginIndex)
-				dependenciesSupplier.push_back(_plugins[dependencyIndex]);
+			if (pluginSpecificationIndex == index1)
+				dependenciesSupplier.push_back(_plugins[index2]);
 		}
 
 		if (dependenciesSupplier.empty())
-			_plugins[currentPluginIndex]->init();
+			_plugins[pluginSpecificationIndex] = _specifications[pluginSpecificationIndex]->create();
 		else
-			_plugins[currentPluginIndex]->init(dependenciesSupplier);
+			_plugins[pluginSpecificationIndex] = _specifications[pluginSpecificationIndex]->create(dependenciesSupplier);
 	}
 }
 
