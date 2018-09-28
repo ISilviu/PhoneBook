@@ -1,20 +1,16 @@
 #pragma once
 
 #include <QWidget>
-#include <qsqlquerymodel.h>
 
 #include "ui_phonebook.h"
 
 #include "adddialog.h"
-
-#include "IPlugin.h"
 
 #include "InMemorySQLiteStoragePlugin.h"
 
 #include "LastName.h"
 #include "FirstName.h"
 #include "PhoneNumber.h"
-#include "ContactId.h"
 
 class UiMainWidget : public QWidget
 {

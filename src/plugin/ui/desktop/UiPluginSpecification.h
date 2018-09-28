@@ -6,7 +6,7 @@
 
 namespace
 {
-	inline constexpr auto dependenci = std::array
+	inline constexpr auto dependencies = std::array
 	{
 		std::string_view{"class InMemorySQLiteStoragePluginSpecification"}
 	};
@@ -20,6 +20,6 @@ public:
 	std::vector<std::string> getDependencies() const noexcept override;
 
 private:
-	const std::vector<std::string> _dependencies{ dependenci.cbegin(), dependenci.cend() };
+	const std::vector<std::string> _dependencies{ dependencies.cbegin(), dependencies.cend() };
 };
 

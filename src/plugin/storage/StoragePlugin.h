@@ -3,8 +3,6 @@
 #include "IPlugin.h"
 #include "ContactsSQLiteRepository.h"
 
-#include <memory>
-
 class StoragePlugin : public IPlugin
 {
 public:

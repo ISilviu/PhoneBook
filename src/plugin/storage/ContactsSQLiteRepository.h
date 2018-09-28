@@ -6,8 +6,9 @@
 
 #include "PhoneBook.h"
 
-#include <qsqlquerymodel.h>
 #include <qsqldatabase.h>
+
+#include <qsqlquerymodel.h>
 
 class ContactsSQLiteRepository : public IRepository<Contact, PhoneBook>
 {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QWidget>
 #include <qapplication.h>
 
 #include "IPlugin.h"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <qsqlquerymodel.h>
-
 #include  "IPlugin.h"
 #include "InMemorySQLiteDatabase.h"
 

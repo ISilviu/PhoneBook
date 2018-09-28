@@ -26,20 +26,6 @@ auto QueriesManager::createAddPersonQuery(LastName const& lastName, FirstName co
 	return query;
 }
 
-//auto QueriesManager::createAddPersonQuery(QString const& lastName, QString const& firstName, QString const& phoneNumber) noexcept -> QSqlQuery
-//{
-//	static QString const addPersonTemplate{ "INSERT INTO contacts (lastname, firstname, phonenumber) VALUES (?,?,?);" };
-//	QSqlQuery query;
-//
-//	query.prepare(addPersonTemplate);
-//
-//	query.addBindValue(lastNaQString::fromUtf8(lastName.get().c_str())me);
-//	query.addBindValue(firstName);
-//	query.addBindValue(phoneNumber);
-//
-//	return query;
-//}
-
 auto QueriesManager::createSearchPersonQuery(LastName const& lastName, FirstName const& firstName) noexcept -> QSqlQuery
 {
 	static QString const searchPersonTemplate{ "SELECT * FROM contacts WHERE lastname = ? AND firstname = ?" };
@@ -51,18 +37,6 @@ auto QueriesManager::createSearchPersonQuery(LastName const& lastName, FirstName
 
 	return query;
 }
-
-//auto QueriesManager::createSearchPersonQuery(QString const& lastName, QString const& firstName) noexcept->QSqlQuery
-//{
-//	static QString const searchPersonTemplate{ "SELECT * FROM contacts WHERE lastname = ? AND firstname = ?" };
-//	QSqlQuery query;
-//
-//	query.prepare(searchPersonTemplate);
-//	query.addBindValue(lastName);
-//	query.addBindValue(firstName);
-//
-//	return query;
-//}
 
 auto QueriesManager::createSearchPersonQuery(ContactId const& id) noexcept -> QSqlQuery
 {
@@ -99,17 +73,3 @@ auto QueriesManager::createUpdatePersonQuery(LastName const& lastName, FirstName
 
 	return query;
 }
-//
-//auto QueriesManager::createUpdatePersonQuery(QString const & lastName, QString const & firstName, QString const & phoneNumber, int const row) noexcept -> QSqlQuery
-//{
-//	static QString const updatePersonTemplate{ "UPDATE contacts SET lastname = ?, firstname = ?, phonenumber = ? WHERE id = ?" };
-//
-//	QSqlQuery query;
-//	query.prepare(updatePersonTemplate);
-//	query.addBindValue(lastName);
-//	query.addBindValue(firstName);
-//	query.addBindValue(phoneNumber);
-//	query.addBindValue(row);
-//
-//	return query;
-//}

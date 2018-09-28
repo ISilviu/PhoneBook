@@ -7,7 +7,7 @@
 class InMemorySQLiteStoragePluginSpecification : public IPluginSpecification
 {
 public:
-	InMemorySQLiteStoragePlugin* create(std::vector<IPlugin*> const& dependencies = std::vector<IPlugin*>()) override;
+	IPlugin* create(std::vector<IPlugin*> const& dependencies = std::vector<IPlugin*>()) override;
 
 	std::vector<std::string> getDependencies() const noexcept override;
 

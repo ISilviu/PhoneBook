@@ -1,6 +1,6 @@
 #include "InMemorySQLiteStoragePluginSpecification.h"
 
-InMemorySQLiteStoragePlugin * InMemorySQLiteStoragePluginSpecification::create(std::vector<IPlugin*> const & dependencies)
+IPlugin* InMemorySQLiteStoragePluginSpecification::create(std::vector<IPlugin*> const & dependencies)
 {
 	return new InMemorySQLiteStoragePlugin();
 }
